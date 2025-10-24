@@ -59,7 +59,7 @@ st.markdown("""
         font-weight: 600 !important;
         margin-bottom: 10px !important;
     }
-    /* Button styling - groovy and vibrant */
+    /* Button styling - groovy and vibrant, aligned left */
     .stButton > button {
         background: linear-gradient(135deg, #D4AF37, #C19A6B);
         color: #0F0F0F;
@@ -71,9 +71,8 @@ st.markdown("""
         transition: all 0.3s ease;
         box-shadow: 0 4px 6px rgba(212, 175, 55, 0.4);
         margin-top: 20px;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
+        white-space: nowrap;
+        min-width: 200px;
     }
     .stButton > button:hover {
         transform: translateY(-3px);
@@ -122,8 +121,10 @@ st.markdown("""
     .button-container {
         display: flex;
         align-items: center;
-        justify-content: center;
-        gap: 10px;
+        justify-content: flex-start;
+        gap: 15px;
+        margin-top: 20px;
+        width: 100%;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -141,15 +142,10 @@ if 'is_loading' not in st.session_state:
 # Create a centered container for button and spinner
 st.markdown('<div class="button-container">', unsafe_allow_html=True)
 
-# Create columns with better ratio for centering
-col_left, col_btn, col_spinner, col_right = st.columns([2, 1.5, 0.5, 2])
+button_clicked = st.button("Generate Your Plan")
 
-with col_btn:
-    button_clicked = st.button("Generate Your Plan")
-
-with col_spinner:
-    if st.session_state['is_loading']:
-        st.markdown('<div class="spinner"></div>', unsafe_allow_html=True)
+if st.session_state['is_loading']:
+    st.markdown('<div class="spinner"></div>', unsafe_allow_html=True)
 
 st.markdown('</div>', unsafe_allow_html=True)
 

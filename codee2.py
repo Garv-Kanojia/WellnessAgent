@@ -184,7 +184,8 @@ Always give the plan for only 2 days not more than that and do not ask for any m
     
 
     def response(self):
-        _ = self.__PlannerAgent(self.prompt)
+        import time
+        time.sleep(3)  
         return {
             "NutritionPlan": "Nutrition plan generation is currently disabled.",
             "FitnessPlan": "Fitness plan generation is currently disabled."
