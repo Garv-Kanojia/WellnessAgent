@@ -2,10 +2,7 @@ import requests
 import json
 import re
 import streamlit as st
-import os
-import dotenv
-from concurrent.futures import ThreadPoolExecutor, as_completed  # Add this line
-dotenv.load_dotenv()
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
 
@@ -14,7 +11,7 @@ def query_model(prompt: str, model: str, api_key: str) -> str:
       url="https://lightning.ai/api/v1/chat/completions",
       headers={
         #   "Authorization": f"Bearer {st.secrets["API_KE
-          "Authorization": f"Bearer {os.getenv(api_key)}",
+          "Authorization": f"Bearer {st.secrets[api_key]}",
           "Content-Type": "application/json",
       },
       data=json.dumps({
@@ -189,33 +186,29 @@ Always give the plan for only 2 days not more than that and do not ask for any m
     
 
     def response(self):
-        return {
-            "NutritionPlan": "nutrition_plan",
-            "FitnessPlan": "fitness_plan"
-        }
-        # planner_response = self.__PlannerAgent(self.prompt)
-        # match = re.search(r'\{.*\}', planner_response, re.DOTALL)
-        # if match:
-        #     json_str = match.group(0)
-        #     plan = json.loads(json_str)
+        planner_response = self.__PlannerAgent(self.prompt)
+        match = re.search(r'\{.*\}', planner_response, re.DOTALL)
+        if match:
+            json_str = match.group(0)
+            plan = json.loads(json_str)
 
-        # else:
-        #     return {"error": "Failed to create a plan, please refine your goal and try again."}
+        else:
+            return {"error": "Failed to create a plan, please refine your goal and try again."}
         
-        # NutrionAgent_response = plan["NutritionAgent"]
-        # FitnessAgent_response = plan["FitnessAgent"]
+        NutrionAgent_response = plan["NutritionAgent"]
+        FitnessAgent_response = plan["FitnessAgent"]
         
-        # # Run both agents in parallel using ThreadPoolExecutor
-        # with ThreadPoolExecutor(max_workers=2) as executor:
-        #     # Submit both tasks
-        #     nutrition_future = executor.submit(self.__NutritionAgent, NutrionAgent_response)
-        #     fitness_future = executor.submit(self.__FitnessAgent, FitnessAgent_response)
+        # Run both agents in parallel using ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            # Submit both tasks
+            nutrition_future = executor.submit(self.__NutritionAgent, NutrionAgent_response)
+            fitness_future = executor.submit(self.__FitnessAgent, FitnessAgent_response)
             
-        #     # Wait for both to complete and get results
-        #     nutrition_plan = nutrition_future.result()
-        #     fitness_plan = fitness_future.result()
+            # Wait for both to complete and get results
+            nutrition_plan = nutrition_future.result()
+            fitness_plan = fitness_future.result()
         
-        # return {
-        #     "NutritionPlan": nutrition_plan,
-        #     "FitnessPlan": fitness_plan
-        # }
+        return {
+            "NutritionPlan": nutrition_plan,
+            "FitnessPlan": fitness_plan
+        }
