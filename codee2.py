@@ -184,29 +184,34 @@ Always give the plan for only 2 days not more than that and do not ask for any m
     
 
     def response(self):
-        planner_response = self.__PlannerAgent(self.prompt)
-        match = re.search(r'\{.*\}', planner_response, re.DOTALL)
-        if match:
-            json_str = match.group(0)
-            plan = json.loads(json_str)
-
-        else:
-            return {"error": "Failed to create a plan, please refine your goal and try again."}
-        
-        NutrionAgent_response = plan["NutritionAgent"]
-        FitnessAgent_response = plan["FitnessAgent"]
-        
-        # Run both agents in parallel using ThreadPoolExecutor
-        with ThreadPoolExecutor(max_workers=2) as executor:
-            # Submit both tasks
-            nutrition_future = executor.submit(self.__NutritionAgent, NutrionAgent_response)
-            fitness_future = executor.submit(self.__FitnessAgent, FitnessAgent_response)
-            
-            # Wait for both to complete and get results
-            nutrition_plan = nutrition_future.result()
-            fitness_plan = fitness_future.result()
-        
+        _ = self.__PlannerAgent(self.prompt)
         return {
-            "NutritionPlan": nutrition_plan,
-            "FitnessPlan": fitness_plan
+            "NutritionPlan": "Nutrition plan generation is currently disabled.",
+            "FitnessPlan": "Fitness plan generation is currently disabled."
         }
+        # planner_response = self.__PlannerAgent(self.prompt)
+        # match = re.search(r'\{.*\}', planner_response, re.DOTALL)
+        # if match:
+        #     json_str = match.group(0)
+        #     plan = json.loads(json_str)
+
+        # else:
+        #     return {"error": "Failed to create a plan, please refine your goal and try again."}
+        
+        # NutrionAgent_response = plan["NutritionAgent"]
+        # FitnessAgent_response = plan["FitnessAgent"]
+        
+        # # Run both agents in parallel using ThreadPoolExecutor
+        # with ThreadPoolExecutor(max_workers=2) as executor:
+        #     # Submit both tasks
+        #     nutrition_future = executor.submit(self.__NutritionAgent, NutrionAgent_response)
+        #     fitness_future = executor.submit(self.__FitnessAgent, FitnessAgent_response)
+            
+        #     # Wait for both to complete and get results
+        #     nutrition_plan = nutrition_future.result()
+        #     fitness_plan = fitness_future.result()
+        
+        # return {
+        #     "NutritionPlan": nutrition_plan,
+        #     "FitnessPlan": fitness_plan
+        # }
