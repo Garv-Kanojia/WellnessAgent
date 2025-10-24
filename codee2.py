@@ -2,9 +2,7 @@ import requests
 import json
 import re
 import streamlit as st
-from concurrent.futures import ThreadPoolExecutor, as_completed
-
-
+from concurrent.futures import ThreadPoolExecutor
 
 def query_model(prompt: str, model: str, api_key: str) -> str:
   response = requests.post(
